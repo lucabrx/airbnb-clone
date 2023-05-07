@@ -1,16 +1,17 @@
 "use client"
+import { UserRegisterType } from '@/schema/user';
 import { type FC } from 'react';
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 import { BiDollar } from 'react-icons/bi';
 
 interface InputProps {
-    id: string;
+    id: "email" | "name" | "password";
     label: string;
     type?: string;
     disabled?: boolean;
     formatPrice?: string;
     required?: boolean;
-    register: UseFormRegister<FieldValues>,
+    register: UseFormRegister<UserRegisterType>,
     errors: FieldErrors;
 }
 

@@ -5,13 +5,14 @@ import { AiFillGithub } from 'react-icons/ai';
 import {FcGoogle } from "react-icons/fc";
 import { useCallback,useState } from 'react';
 import {useForm, SubmitHandler, type FieldValues} from "react-hook-form";
-
+import { zodResolver } from '@hookform/resolvers/zod';
 import useRegisterModal from '@/hooks/useRegisterModal';
 import Modal from './Modal';
 import Heading from '../Heading';
 import Input from '../inputs/Input';
 import { toast } from 'react-hot-toast';
 import Button from '../Button';
+import { UserRegisterSchema, type UserRegisterType } from '@/schema/user';
 
 interface RegisterModalProps {
   
@@ -22,12 +23,9 @@ const RegisterModal: FC<RegisterModalProps> = ({}) => {
     const registerModal = useRegisterModal();
     const [isLoading, setIsLoading] = useState(false);
 
-    const {register,handleSubmit,formState:{errors}} = useForm<FieldValues>({
-        defaultValues: {
-            name: "",
-            email: "",
-            password: "",
-        }
+    const {register,handleSubmit,formState:{errors}} = useForm<UserRegisterType>({
+        resolver: zodResolver(UserRegisterSchema)
+
     })
     
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
