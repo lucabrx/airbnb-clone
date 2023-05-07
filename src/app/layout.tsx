@@ -1,6 +1,7 @@
 import Navbar from '@/components/navbar/Navbar'
 import './globals.css'
 import { Nunito } from 'next/font/google'
+import Hydrate from '@/components/Hydrate'
 
 const font = Nunito({ subsets: ['latin'] })
 
@@ -17,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        <Navbar />
+        <Hydrate>
+          <Navbar />
+        </Hydrate>
         {children}
         </body>
     </html>
