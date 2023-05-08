@@ -5,10 +5,11 @@ import useRentModal from '@/hooks/useRentModal';
 import Heading from '../Heading';
 import { categories } from '../navbar/Categories';
 import CategoryInput from '../inputs/CategoryInput';
-import { useForm } from 'react-hook-form';
-import { RentalSchema, RentalType } from '@/schema/rental';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { FieldValues, useForm } from 'react-hook-form';
+
 import CountrySelect from '../inputs/CountrySelect';
+import dynamic from 'next/dynamic';
+
 
 interface RentModalProps {
   
@@ -33,13 +34,28 @@ const RentModal: FC<RentModalProps> = ({}) => {
         formState: { errors },
         setValue,
         watch,
-    } = useForm<RentalType>({
-        resolver: zodResolver(RentalSchema)
+    } = useForm<FieldValues>({
+         defaultValues: {
+            category: '',
+            location: null,
+            guestCount: 1,
+            roomCount: 1,
+            bathroomCount: 1,
+            imageSrc: '',
+            price: 1,
+            title: '',
+            description: '',
+          }
     })
 
     const category = watch("category");
+    const location = watch("location")
 
-    const setCustomValue = (id: "category" , value: any) => {
+    const Map = useMemo(() => dynamic(() => import('../Map'), {
+        ssr: false
+    }), [location])
+
+    const setCustomValue = (id: string , value: any) => {
         setValue(id, value, {
             shouldValidate: true,
             shouldDirty: true,
@@ -98,7 +114,11 @@ const RentModal: FC<RentModalProps> = ({}) => {
                 title="Where is your place located?"
                 subtitle=" Help guests find u!"
                 />
-                <CountrySelect />
+                <CountrySelect 
+                value={location}
+                onChange={(value) => setCustomValue("location", value)}
+                />
+                <Map center={location?.latlng} />
             </div>
         )
     }
