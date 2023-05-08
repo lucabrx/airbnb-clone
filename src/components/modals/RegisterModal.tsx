@@ -68,6 +68,7 @@ const RegisterModal: FC = ({}) => {
         id="password"
         label="Password"
         disabled={isLoading}
+        type="password"
         register={register}
         errors={errors}
         required

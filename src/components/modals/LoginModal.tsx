@@ -46,7 +46,6 @@ const LoginModal: FC = ({}) => {
         }
         if (res?.error) {
             toast.error(res.error)
-            toast.error('Something went wrong')
         }
        })
     }
@@ -70,6 +69,7 @@ const LoginModal: FC = ({}) => {
         label="Password"
         disabled={isLoading}
         register={register}
+        type="password"
         errors={errors}
         required
         />
