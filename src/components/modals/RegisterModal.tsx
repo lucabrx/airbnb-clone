@@ -47,6 +47,11 @@ const RegisterModal: FC = ({}) => {
         .finally(() => setIsLoading(false))
     }
 
+    const toggle = useCallback(() => {
+        registerModal.onClose();
+        loginModal.onOpen();
+        }, [loginModal, loginModal])
+
     const bodyContent = (
         <div className="flex flex-col space-y-4">
         <Heading
@@ -99,9 +104,9 @@ const RegisterModal: FC = ({}) => {
             <div className='text-neutral-500 text-center mt-4 font-light'>
                 <div className='flex flex-row items-center gap-2 justify-center'>
                 <p>Already have an account?</p>
-                <p 
-                onClick={registerModal.onClose}
-                className='text-neutral-800 cursor-pointer hover:underline'>Login</p>
+                <button
+                onClick={toggle}
+                className='text-neutral-800 cursor-pointer hover:underline'>Login</button>
                 </div>
             </div>
         </div>

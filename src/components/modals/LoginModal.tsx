@@ -1,5 +1,5 @@
 "use client"
-import { type FC } from 'react';
+import { useCallback, type FC } from 'react';
 import axios from "axios";
 import { AiFillGithub } from 'react-icons/ai';
 import {FcGoogle } from "react-icons/fc";
@@ -15,6 +15,7 @@ import { UserLoginSchema, type UserLoginType } from '@/schema/user';
 import useLoginModal from '@/hooks/useLoginModal';
 import LoginInput from '../inputs/LoginInput';
 import { useRouter } from 'next/navigation';
+import useRegisterModal from '@/hooks/useRegisterModal';
 
 
 
@@ -22,6 +23,7 @@ import { useRouter } from 'next/navigation';
 const LoginModal: FC = ({}) => {
     const router = useRouter()
     const loginModal = useLoginModal();
+    const registerModal = useRegisterModal();
     const [isLoading, setIsLoading] = useState(false);
 
     const {register,handleSubmit,formState:{errors},reset} = useForm<UserLoginType>({
@@ -49,6 +51,11 @@ const LoginModal: FC = ({}) => {
         }
        })
     }
+
+    const toggle = useCallback(() => {
+        loginModal.onClose();
+        registerModal.onOpen();
+    }, [loginModal, loginModal])
 
     const bodyContent = (
         <div className="flex flex-col space-y-4">
@@ -93,10 +100,10 @@ const LoginModal: FC = ({}) => {
             />
             <div className='text-neutral-500 text-center mt-4 font-light'>
                 <div className='flex flex-row items-center gap-2 justify-center'>
-                <p>Already have an account?</p>
-                <p 
-                onClick={loginModal.onClose}
-                className='text-neutral-800 cursor-pointer hover:underline'>Login</p>
+                <p>Firist time using Airbnb?</p>
+                <button 
+                onClick={toggle}
+                className='text-neutral-800 cursor-pointer hover:underline'>Create an account</button>
                 </div>
             </div>
         </div>
