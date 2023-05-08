@@ -5,6 +5,7 @@ import Hydrate from '@/components/Hydrate'
 import RegisterModal from '@/components/modals/RegisterModal'
 import ToasterProviders from '@/components/providers/ToasterProviders'
 import LoginModal from '@/components/modals/LoginModal'
+import getCurrentUser from '@/utils/getCurrentUser'
 
 const font = Nunito({ subsets: ['latin'] })
 
@@ -13,11 +14,13 @@ export const metadata = {
   description: 'Vacation Rentals, Cabins, Beach Houses, Unique Homes & Experiences',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const currentUser = await getCurrentUser()
+
   return (
     <html lang="en">
       <body className={font.className}>
@@ -25,8 +28,8 @@ export default function RootLayout({
         <Hydrate>
           <RegisterModal />
           <LoginModal />
-          <Navbar />
-        </Hydrate>
+          <Navbar currentUser={currentUser} />        
+          </Hydrate>
         {children}
     
         </body>
