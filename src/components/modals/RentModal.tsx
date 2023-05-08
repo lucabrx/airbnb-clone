@@ -8,6 +8,7 @@ import CategoryInput from '../inputs/CategoryInput';
 import { useForm } from 'react-hook-form';
 import { RentalSchema, RentalType } from '@/schema/rental';
 import { zodResolver } from '@hookform/resolvers/zod';
+import CountrySelect from '../inputs/CountrySelect';
 
 interface RentModalProps {
   
@@ -90,13 +91,25 @@ const RentModal: FC<RentModalProps> = ({}) => {
         </div>
     )
 
+    if(step === STEPS.LOCATION) {
+        bodyContent = (
+            <div className='flex flex-col gap-8'>
+                <Heading
+                title="Where is your place located?"
+                subtitle=" Help guests find u!"
+                />
+                <CountrySelect />
+            </div>
+        )
+    }
+
     
   return (
 <Modal 
 title="Airbnb your home"
 isOpen={rentModal.isOpen}
 onClose={rentModal.onClose}
-onSubmit={rentModal.onClose}
+onSubmit={onNext}
 actionLabel={actionLabel}
 body={bodyContent}
 secondaryActionLabel={secondActionLabel}
