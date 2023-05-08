@@ -1,7 +1,7 @@
 "use client"
-import { UserRegisterType } from '@/schema/user';
+import {  UserRegisterType } from '@/schema/user';
 import { type FC } from 'react';
-import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
+import { FieldErrors,  UseFormRegister } from 'react-hook-form';
 import { BiDollar } from 'react-icons/bi';
 
 interface InputProps {
@@ -15,7 +15,7 @@ interface InputProps {
     errors: FieldErrors;
 }
 
-const Input: FC<InputProps> = ({
+const RegisterInput: FC<InputProps> = ({
     id,
     label,
     type = "text",
@@ -57,4 +57,4 @@ ${errors[id] ? 'text-rose-500' : 'text-zinc-400'}
 )
 }
 
-export default Input
+export default RegisterInput

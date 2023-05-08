@@ -4,6 +4,7 @@ import { Nunito } from 'next/font/google'
 import Hydrate from '@/components/Hydrate'
 import RegisterModal from '@/components/modals/RegisterModal'
 import ToasterProviders from '@/components/providers/ToasterProviders'
+import LoginModal from '@/components/modals/LoginModal'
 
 const font = Nunito({ subsets: ['latin'] })
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <ToasterProviders />
         <Hydrate>
           <RegisterModal />
+          <LoginModal />
           <Navbar />
         </Hydrate>
         {children}

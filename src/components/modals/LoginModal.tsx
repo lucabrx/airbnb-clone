@@ -3,35 +3,34 @@ import { type FC } from 'react';
 import axios from "axios";
 import { AiFillGithub } from 'react-icons/ai';
 import {FcGoogle } from "react-icons/fc";
-import { useCallback,useState } from 'react';
-import {useForm, SubmitHandler} from "react-hook-form";
+import { useState } from 'react';
+import {useForm, SubmitHandler, type FieldValues} from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import useRegisterModal from '@/hooks/useRegisterModal';
 import Modal from './Modal';
 import Heading from '../Heading';
+import Input from '../inputs/RegisterInput';
 import { toast } from 'react-hot-toast';
 import Button from '../Button';
-import { UserRegisterSchema, type UserRegisterType } from '@/schema/user';
-import RegisterInput from '../inputs/RegisterInput';
+import { UserLoginSchema, type UserLoginType } from '@/schema/user';
+import useLoginModal from '@/hooks/useLoginModal';
+import LoginInput from '../inputs/LoginInput';
 
 
 
 
-
-const RegisterModal: FC = ({}) => {
-    const registerModal = useRegisterModal();
+const LoginModal: FC = ({}) => {
+    const loginModal = useLoginModal();
     const [isLoading, setIsLoading] = useState(false);
 
-    const {register,handleSubmit,formState:{errors}} = useForm<UserRegisterType>({
-        resolver: zodResolver(UserRegisterSchema)
-
+    const {register,handleSubmit,formState:{errors}} = useForm<UserLoginType>({
+        resolver: zodResolver(UserLoginSchema)
     })
     
-    const onSubmit: SubmitHandler<UserRegisterType> = (data) => {
+    const onSubmit: SubmitHandler<UserLoginType> = (data) => {
         setIsLoading(true);
         axios.post("/api/register", data)
         .then(() => {
-            registerModal.onClose();
+            loginModal.onClose();
         })
         .catch(() => {
             toast.error("Something went wrong")
@@ -43,10 +42,10 @@ const RegisterModal: FC = ({}) => {
     const bodyContent = (
         <div className="flex flex-col space-y-4">
         <Heading
-        title="Welcome to Airbnb"
-        subtitle='Create an account!'
+        title="Welcome back"
+        subtitle='Login to your account'
         />
-        <RegisterInput 
+        <LoginInput 
         id="email"
         label="Email"
         disabled={isLoading}
@@ -54,15 +53,7 @@ const RegisterModal: FC = ({}) => {
         errors={errors}
         required
         />
-          <RegisterInput 
-        id="name"
-        label="Name"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
-        />
-          <RegisterInput 
+          <LoginInput 
         id="password"
         label="Password"
         disabled={isLoading}
@@ -92,7 +83,7 @@ const RegisterModal: FC = ({}) => {
                 <div className='flex flex-row items-center gap-2 justify-center'>
                 <p>Already have an account?</p>
                 <p 
-                onClick={registerModal.onClose}
+                onClick={loginModal.onClose}
                 className='text-neutral-800 cursor-pointer hover:underline'>Login</p>
                 </div>
             </div>
@@ -103,10 +94,10 @@ const RegisterModal: FC = ({}) => {
   return (
 <Modal
 disabled={isLoading}
-isOpen={registerModal.isOpen}
-onClose={registerModal.onClose}
+isOpen={loginModal.isOpen}
+onClose={loginModal.onClose}
 onSubmit={handleSubmit(onSubmit)}
-title="Register"
+title="Login"
 actionLabel="Continue"
 body={bodyContent}
 footer={footerContent}
@@ -115,4 +106,4 @@ footer={footerContent}
 )
 }
 
-export default RegisterModal
+export default LoginModal
