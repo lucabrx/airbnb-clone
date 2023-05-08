@@ -9,6 +9,7 @@ import { FieldValues, useForm } from 'react-hook-form';
 
 import CountrySelect from '../inputs/CountrySelect';
 import dynamic from 'next/dynamic';
+import Counter from '../inputs/Counter';
 
 
 interface RentModalProps {
@@ -50,6 +51,9 @@ const RentModal: FC<RentModalProps> = ({}) => {
 
     const category = watch("category");
     const location = watch("location")
+    const guestCount = watch("guestCount")
+    const roomCount = watch("roomCount")
+    const bathroomCount = watch("bathroomCount")
 
     const Map = useMemo(() => dynamic(() => import('../Map'), {
         ssr: false
@@ -123,7 +127,36 @@ const RentModal: FC<RentModalProps> = ({}) => {
         )
     }
 
-    
+    if(step === STEPS.INFO) {
+        bodyContent = (
+            <div className='flex flex-col gap-8'>
+                <Heading
+                title="Share some basics about your place"
+                subtitle="What amenities can guests expect?"
+                />
+                 <Counter
+                title='Guests'
+                subtitle='How many guests do u allowed?'
+                value={guestCount}
+                onChange={(value) => setCustomValue("guestCount", value)}
+                />
+                <hr />
+                <Counter
+                title='Rooms'
+                subtitle='How many rooms do u have?'
+                value={roomCount}
+                onChange={(value) => setCustomValue("roomCount", value)}
+                />
+                <hr/>
+                <Counter
+                title='Bathrooms'
+                subtitle='How many bathrooms do u have?'
+                value={bathroomCount}
+                onChange={(value) => setCustomValue("bathroomCount", value)}
+                />
+            </div>
+        )
+        }
   return (
 <Modal 
 title="Airbnb your home"
