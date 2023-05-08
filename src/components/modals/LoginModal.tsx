@@ -4,39 +4,51 @@ import axios from "axios";
 import { AiFillGithub } from 'react-icons/ai';
 import {FcGoogle } from "react-icons/fc";
 import { useState } from 'react';
-import {useForm, SubmitHandler, type FieldValues} from "react-hook-form";
+import {useForm, SubmitHandler, type FieldValues, set} from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import Modal from './Modal';
 import Heading from '../Heading';
-import Input from '../inputs/RegisterInput';
+import {signIn} from "next-auth/react"
 import { toast } from 'react-hot-toast';
 import Button from '../Button';
 import { UserLoginSchema, type UserLoginType } from '@/schema/user';
 import useLoginModal from '@/hooks/useLoginModal';
 import LoginInput from '../inputs/LoginInput';
+import { useRouter } from 'next/navigation';
 
 
 
 
 const LoginModal: FC = ({}) => {
+    const router = useRouter()
     const loginModal = useLoginModal();
     const [isLoading, setIsLoading] = useState(false);
 
-    const {register,handleSubmit,formState:{errors}} = useForm<UserLoginType>({
+    const {register,handleSubmit,formState:{errors},reset} = useForm<UserLoginType>({
         resolver: zodResolver(UserLoginSchema)
     })
     
     const onSubmit: SubmitHandler<UserLoginType> = (data) => {
-        setIsLoading(true);
-        axios.post("/api/register", data)
-        .then(() => {
-            loginModal.onClose();
-        })
-        .catch(() => {
-            toast.error("Something went wrong")
+        setIsLoading(true)
+       signIn('credentials', {
+              email: data.email,
+              password: data.password,
+              redirect: false
+       })
+       .then((res) => {
+        setIsLoading(false)
+
+        if(res?.ok) {
+            toast.success('Logged in');
+            reset()
+            router.refresh();
+            loginModal.onClose(); 
         }
-        )
-        .finally(() => setIsLoading(false))
+        if (res?.error) {
+            toast.error(res.error)
+            toast.error('Something went wrong')
+        }
+       })
     }
 
     const bodyContent = (

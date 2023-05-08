@@ -22,7 +22,7 @@ const RegisterModal: FC = ({}) => {
     const registerModal = useRegisterModal();
     const [isLoading, setIsLoading] = useState(false);
 
-    const {register,handleSubmit,formState:{errors}} = useForm<UserRegisterType>({
+    const {register,handleSubmit,formState:{errors}, reset} = useForm<UserRegisterType>({
         resolver: zodResolver(UserRegisterSchema)
 
     })
@@ -31,6 +31,8 @@ const RegisterModal: FC = ({}) => {
         setIsLoading(true);
         axios.post("/api/register", data)
         .then(() => {
+            toast.success("Account created")
+            reset()
             registerModal.onClose();
         })
         .catch(() => {
