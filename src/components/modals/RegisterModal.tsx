@@ -13,6 +13,8 @@ import { toast } from 'react-hot-toast';
 import Button from '../Button';
 import { UserRegisterSchema, type UserRegisterType } from '@/schema/user';
 import RegisterInput from '../inputs/RegisterInput';
+import { signIn } from 'next-auth/react';
+import useLoginModal from '@/hooks/useLoginModal';
 
 
 
@@ -20,6 +22,7 @@ import RegisterInput from '../inputs/RegisterInput';
 
 const RegisterModal: FC = ({}) => {
     const registerModal = useRegisterModal();
+    const loginModal = useLoginModal();
     const [isLoading, setIsLoading] = useState(false);
 
     const {register,handleSubmit,formState:{errors}, reset} = useForm<UserRegisterType>({
@@ -34,6 +37,8 @@ const RegisterModal: FC = ({}) => {
             toast.success("Account created")
             reset()
             registerModal.onClose();
+            loginModal.onOpen();
+
         })
         .catch(() => {
             toast.error("Something went wrong")
@@ -83,13 +88,13 @@ const RegisterModal: FC = ({}) => {
             outline
             label="Continue with Google"
             icon={FcGoogle}
-            onClick={() => {}}
+            onClick={() => signIn("google")}
             />
             <Button
             outline
             label="Continue with Github"
             icon={AiFillGithub}
-            onClick={() => {}}
+            onClick={() => signIn("github")}
             />
             <div className='text-neutral-500 text-center mt-4 font-light'>
                 <div className='flex flex-row items-center gap-2 justify-center'>
