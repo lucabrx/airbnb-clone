@@ -5,13 +5,16 @@ import useRentModal from '@/hooks/useRentModal';
 import Heading from '../Heading';
 import { categories } from '../navbar/Categories';
 import CategoryInput from '../inputs/CategoryInput';
-import { FieldValues, useForm } from 'react-hook-form';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 
 import Input from '../inputs/Input';
 import CountrySelect from '../inputs/CountrySelect';
 import dynamic from 'next/dynamic';
 import Counter from '../inputs/Counter';
 import ImageUpload from '../inputs/ImageUpload';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 
 interface RentModalProps {
@@ -28,6 +31,7 @@ enum STEPS {
   }
 
 const RentModal: FC<RentModalProps> = ({}) => {
+    const router = useRouter()
     const [step, setStep] = useState(STEPS.CATEGORY);
     const [isLoading, setIsLoading] = useState(false);
     const rentModal = useRentModal()
@@ -38,6 +42,7 @@ const RentModal: FC<RentModalProps> = ({}) => {
         formState: { errors },
         setValue,
         watch,
+        reset
     } = useForm<FieldValues>({
          defaultValues: {
             category: '',
@@ -76,6 +81,27 @@ const RentModal: FC<RentModalProps> = ({}) => {
     }
     const onNext = () => {
         setStep((value) => value + 1)
+    }
+
+    const onSubmit: SubmitHandler<FieldValues> =  (data) => {
+       if( step !== STEPS.PRICE) return onNext();
+
+       setIsLoading(true)
+
+       axios.post('/api/listings', data)
+       .then(() => {
+        toast.success('Listing created successfully')
+        router.refresh()
+        reset()
+        setStep(STEPS.CATEGORY);
+        rentModal.onClose()
+       })
+       .catch(() => {
+        toast.error('Something went wrong')
+        })
+        .finally(() => {
+            setIsLoading(false)
+        })
     }
 
     const actionLabel = useMemo(() => {
@@ -230,7 +256,7 @@ const RentModal: FC<RentModalProps> = ({}) => {
 title="Airbnb your home"
 isOpen={rentModal.isOpen}
 onClose={rentModal.onClose}
-onSubmit={onNext}
+onSubmit={handleSubmit(onSubmit)}
 actionLabel={actionLabel}
 body={bodyContent}
 secondaryActionLabel={secondActionLabel}
