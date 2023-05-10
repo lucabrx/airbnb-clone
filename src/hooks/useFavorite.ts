@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useCallback, useMemo } from "react";
+import { MouseEvent, MouseEventHandler, useCallback, useMemo } from "react";
 import { toast } from "react-hot-toast";
 
 import { SafeUser } from "@/types";
@@ -22,7 +22,7 @@ const useFavorite = ({ listingId, currentUser }: IUseFavorite) => {
     return list.includes(listingId);
   }, [currentUser, listingId]);
 
-  const toggleFavorite = useCallback(async (e: MouseEvent<HTMLDivElement>) => {
+  const toggleFavorite = useCallback(async (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
     if (!currentUser) {
