@@ -7,6 +7,7 @@ import { categories } from '../navbar/Categories';
 import CategoryInput from '../inputs/CategoryInput';
 import { FieldValues, useForm } from 'react-hook-form';
 
+import Input from '../inputs/Input';
 import CountrySelect from '../inputs/CountrySelect';
 import dynamic from 'next/dynamic';
 import Counter from '../inputs/Counter';
@@ -27,7 +28,8 @@ enum STEPS {
   }
 
 const RentModal: FC<RentModalProps> = ({}) => {
-    const [step, setStep] = useState(STEPS.CATEGORY)
+    const [step, setStep] = useState(STEPS.CATEGORY);
+    const [isLoading, setIsLoading] = useState(false);
     const rentModal = useRentModal()
 
     const {
@@ -172,6 +174,34 @@ const RentModal: FC<RentModalProps> = ({}) => {
                 onChange={(value) => setCustomValue("imageSrc", value)}
                 />
             </div>
+            )
+        }
+
+        if (step === STEPS.DESCRIPTION) {
+            bodyContent = (
+            <div className='flex flex-col gap-8'>
+                <Heading
+                title="Describe your place to guests"
+                subtitle="Tell them what you love about it"
+                />
+                <Input
+                id="title"
+                label="Title"
+                disabled={isLoading}
+                register={register}
+                errors={errors}
+                required
+                />
+                 <hr />
+                 <Input
+                id="description"
+                label="Description"
+                disabled={isLoading}
+                register={register}
+                errors={errors}
+                required
+                />
+                </div> 
             )
         }
   return (
