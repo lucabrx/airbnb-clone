@@ -6,10 +6,12 @@ import Container from './Container';
 import ListingHead from './listings/ListingHead';
 import ListingInfo from './listings/ListingInfo';
 import useLoginModal from '@/hooks/useLoginModal';
-import { useRouter } from 'next/router';
-import { differenceInDays, eachDayOfInterval } from 'date-fns';
+import { useRouter } from 'next/navigation';
+import { differenceInCalendarDays, eachDayOfInterval } from 'date-fns';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import ListingReservation from './listings/ListingReservation';
+import { Range } from 'react-date-range';
 
 const initialDateRange = {
     startDate: new Date(),
@@ -52,7 +54,7 @@ const ListingClient: FC<ListingClientProps> = ({listing,currentUser,reservations
 
       const [isLoading, setIsLoading] = useState(false);
       const [totalPrice, setTotalPrice] = useState(listing.price);
-      const [dateRange, setDateRange] = useState(initialDateRange);
+      const [dateRange, setDateRange] = useState<Range>(initialDateRange);
 
        const onCreateReservation = useCallback(() => {
       if (!currentUser) {
@@ -89,7 +91,7 @@ const ListingClient: FC<ListingClientProps> = ({listing,currentUser,reservations
 
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
-      const dayCount = differenceInDays(
+      const dayCount = differenceInCalendarDays(
         dateRange.endDate, 
         dateRange.startDate
       );
@@ -123,6 +125,17 @@ const ListingClient: FC<ListingClientProps> = ({listing,currentUser,reservations
             bathroomCount={listing.bathroomCount}
             locationValue={listing.locationValue}
             />
+            <div className='order-first mb-10 md:order-last md:col-span-3'>
+              <ListingReservation
+                 price={listing.price}
+                 totalPrice={totalPrice}
+                 onChangeDate={(value) => setDateRange(value)}
+                 dateRange={dateRange}
+                 onSubmit={onCreateReservation}
+                 disabled={isLoading}
+                 disabledDates={disabledDates}
+                  />
+            </div>
         </div>
     </div>
 </div>
