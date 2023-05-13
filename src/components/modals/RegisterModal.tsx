@@ -50,7 +50,7 @@ const RegisterModal: FC = ({}) => {
     const toggle = useCallback(() => {
         registerModal.onClose();
         loginModal.onOpen();
-        }, [loginModal, loginModal])
+        }, [loginModal, registerModal])
 
     const bodyContent = (
         <div className="flex flex-col space-y-4">
