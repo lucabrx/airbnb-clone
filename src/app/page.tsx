@@ -8,8 +8,8 @@ import getListings, { IListingsParams } from "@/utils/getListings";
 interface HomeProps {
   searchParams: IListingsParams
 };
-
-export default async function Home({ searchParams} : HomeProps) {
+export const dynamic = 'force-dynamic'
+export default async function Home({ searchParams } : HomeProps) {
   const listings = await getListings(searchParams);
 
   const currentUser = await getCurrentUser()
