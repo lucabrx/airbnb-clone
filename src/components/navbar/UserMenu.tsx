@@ -61,11 +61,14 @@ const UserMenu: FC<UserMenuProps> = ({currentUser}) => {
                     <>
                     <MenuItem
                     label="My trips"
-                    onClick={() => router.push('/trips')}
+                    onClick={() => {router.push('/trips')
+                    setShowMenu(false)
+                    }}
                     />
                     <MenuItem
                     label="My favorites"
-                    onClick={() =>{}}
+                    onClick={() => {router.push("/favorites")
+                    setShowMenu(false)}}
                     />
                     <MenuItem
                     label="My properties"
@@ -73,11 +76,13 @@ const UserMenu: FC<UserMenuProps> = ({currentUser}) => {
                     />
                      <MenuItem
                     label="My reservations"
-                    onClick={() => router.push('/reservations')}
+                    onClick={() => {router.push('/reservations') 
+                    setShowMenu(false)}}
                     />
                     <MenuItem
                     label="Airbnb my home"
-                    onClick={rentModal.onOpen}
+                    onClick={() => {rentModal.onOpen()
+                    setShowMenu(false)}}
                     />
                     <hr />
                     <MenuItem
