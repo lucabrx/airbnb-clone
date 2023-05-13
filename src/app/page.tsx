@@ -3,11 +3,15 @@ import EmptyState from "@/components/EmptyState";
 import Hydrate from "@/components/Hydrate";
 import ListingCard from "@/components/listings/ListingCard";
 import getCurrentUser from "@/utils/getCurrentUser";
-import getListings from "@/utils/getListings";
+import getListings, { IListingsParams } from "@/utils/getListings";
 
+interface HomeProps {
+  searchParams: IListingsParams
+};
 
-export default async function Home() {
-  const listings = await getListings();
+export default async function Home({ searchParams} : HomeProps) {
+  const listings = await getListings(searchParams);
+
   const currentUser = await getCurrentUser()
 
   if (listings.length === 0) {
