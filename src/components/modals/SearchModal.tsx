@@ -2,7 +2,7 @@
 
 import qs from 'query-string';
 import dynamic from 'next/dynamic'
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Range } from 'react-date-range';
 import { formatISO } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -16,6 +16,8 @@ import CountrySelect, {
   CountrySelectValue
 } from "../inputs/CountrySelect";
 import Heading from '../Heading';
+import useLockOverflow from '@/hooks/useLockOverflow';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 enum STEPS {
   LOCATION = 0,
@@ -27,6 +29,7 @@ const SearchModal = () => {
   const router = useRouter();
   const searchModal = useSearchModal();
   const params = useSearchParams();
+  const searchModalRef = useRef<HTMLDivElement>(null);
 
   const [step, setStep] = useState(STEPS.LOCATION);
 
@@ -117,6 +120,9 @@ const SearchModal = () => {
     return 'Back'
   }, [step]);
 
+  useLockOverflow(searchModal.isOpen);
+  useClickOutside(searchModalRef, searchModal.onClose);
+
   let bodyContent = (
     <div className="flex flex-col gap-8">
       <Heading
@@ -183,6 +189,7 @@ const SearchModal = () => {
 
   return (
     <Modal
+      ref={searchModalRef}
       isOpen={searchModal.isOpen}
       title="Filters"
       actionLabel={actionLabel}

@@ -1,5 +1,5 @@
 "use client"
-import { ReactElement, type FC, useState, useEffect, useCallback } from 'react';
+import { ReactElement, type FC, useState, useEffect, useCallback, forwardRef } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import Button from '../Button';
 interface ModalProps {
@@ -14,8 +14,9 @@ interface ModalProps {
   disableAction?: boolean;
   secondaryAction?: () => void;
   secondaryActionLabel?: string;
+
 }
-const Modal: FC<ModalProps> = ({
+const Modal  = forwardRef<HTMLDivElement, ModalProps>(({
     isOpen,
     onClose,
     onSubmit,
@@ -27,7 +28,7 @@ const Modal: FC<ModalProps> = ({
     disableAction,
     secondaryAction,
     secondaryActionLabel,
-}) => {
+}, ref) => {
     const [showModal, setShowModal] = useState(isOpen)
 
     useEffect(() => {
@@ -60,7 +61,7 @@ const Modal: FC<ModalProps> = ({
   return (
 <> 
 <div className='flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-800/70'>
-<div className='relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 h-full lg:h-auto md:h-auto mx-auto'>
+<div ref={ref} className='relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 h-full lg:h-auto md:h-auto mx-auto'>
     {/* content */}
     <div className={`translate duration-300 h-full 
     ${showModal ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}>
@@ -105,6 +106,6 @@ const Modal: FC<ModalProps> = ({
 </div>
 </>
 )
-}
-
+})
+Modal.displayName = "Modal"
 export default Modal

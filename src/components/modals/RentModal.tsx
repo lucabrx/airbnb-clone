@@ -1,5 +1,5 @@
 "use client"
-import { useState, type FC, useMemo } from 'react';
+import { useState, type FC, useMemo, useRef } from 'react';
 import Modal from './Modal';
 import useRentModal from '@/hooks/useRentModal';
 import Heading from '../Heading';
@@ -15,6 +15,8 @@ import ImageUpload from '../inputs/ImageUpload';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import useLockOverflow from '@/hooks/useLockOverflow';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 
 interface RentModalProps {
@@ -34,7 +36,8 @@ const RentModal: FC<RentModalProps> = ({}) => {
     const router = useRouter()
     const [step, setStep] = useState(STEPS.CATEGORY);
     const [isLoading, setIsLoading] = useState(false);
-    const rentModal = useRentModal()
+    const rentModal = useRentModal();
+    const rentModalRef = useRef<HTMLDivElement>(null);
 
     const {
         register,
@@ -119,6 +122,9 @@ const RentModal: FC<RentModalProps> = ({}) => {
 
         return 'Back'
     }, [step])
+
+    useLockOverflow(rentModal.isOpen)
+    useClickOutside(rentModalRef, rentModal.onClose)
 
     let bodyContent = (
         <div className='flex flex-col gap-8'>
@@ -253,6 +259,7 @@ const RentModal: FC<RentModalProps> = ({}) => {
           }
   return (
 <Modal 
+ref={rentModalRef}
 title="Airbnb your home"
 isOpen={rentModal.isOpen}
 onClose={rentModal.onClose}

@@ -1,5 +1,5 @@
 "use client"
-import { useCallback, type FC } from 'react';
+import { useCallback, type FC, useRef } from 'react';
 import axios from "axios";
 import { AiFillGithub } from 'react-icons/ai';
 import {FcGoogle } from "react-icons/fc";
@@ -16,6 +16,8 @@ import useLoginModal from '@/hooks/useLoginModal';
 import LoginInput from '../inputs/LoginInput';
 import { useRouter } from 'next/navigation';
 import useRegisterModal from '@/hooks/useRegisterModal';
+import useLockOverflow from '@/hooks/useLockOverflow';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 
 
@@ -25,6 +27,7 @@ const LoginModal: FC = ({}) => {
     const loginModal = useLoginModal();
     const registerModal = useRegisterModal();
     const [isLoading, setIsLoading] = useState(false);
+    const loginModalRef= useRef<HTMLDivElement>(null);
 
     const {register,handleSubmit,formState:{errors},reset} = useForm<UserLoginType>({
         resolver: zodResolver(UserLoginSchema)
@@ -56,6 +59,9 @@ const LoginModal: FC = ({}) => {
         loginModal.onClose();
         registerModal.onOpen();
     }, [loginModal, registerModal])
+
+    useLockOverflow(loginModal.isOpen)
+    useClickOutside(loginModalRef, loginModal.onClose)
 
     const bodyContent = (
         <div className="flex flex-col space-y-4">
@@ -112,6 +118,7 @@ const LoginModal: FC = ({}) => {
     )
   return (
 <Modal
+ref={loginModalRef}
 disabled={isLoading}
 isOpen={loginModal.isOpen}
 onClose={loginModal.onClose}
